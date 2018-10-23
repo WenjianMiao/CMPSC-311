@@ -417,6 +417,42 @@ void sigtstp_handler(int sig)
  * End signal handlers
  *********************/
 
+/********************************
+ * Error-handling wrapper function
+ ********************************/
+ void Sigemptyset(sigset_t *mask){
+    if(sigemptyset(mask)<0)
+        unix_error("Sigemptyset error");
+    return;
+ }
+ void Sigaddset(sigset_t *mask,int sign){
+    if(sigaddset(mask,sign)<0)
+        unix_error("Sigaddset error");
+    return;
+ }
+ void Sigprocmask(int how,sigset_t *mask,sigset_t *oldmask){
+     if(sigprocmask(how,mask,oldmask)<0)
+        unix_error("Sigprocmask error");
+     return;
+ }
+ pid_t Fork(void){
+    pid_t pid;
+    if((pid=fork())<0)
+        unix_error("Fork error");
+    return pid;
+ }
+ void Setpgid(pid_t pid,pid_t gpid){
+    if(setpgid(pid,gpid)<0){
+        unix_error("setpgid error");
+    }
+    return;
+ }
+ void Kill(pid_t pid,int sig){
+    if(kill(pid,sig)<0)
+        unix_error("Kill error");
+    return;
+}
+
 /***********************************************
  * Helper routines that manipulate the job list
  **********************************************/
